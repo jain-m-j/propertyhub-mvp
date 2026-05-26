@@ -1,0 +1,8 @@
+{
+  "/welcome/page": "app/welcome/page.js",
+  "/login/page": "app/login/page.js",
+  "/(app)/home/page": "app/(app)/home/page.js",
+  "/(app)/my-listings/page": "app/(app)/my-listings/page.js",
+  "/(app)/admin/page": "app/(app)/admin/page.js",
+  "/(app)/post-property/page": "app/(app)/post-property/page.js"
+}
