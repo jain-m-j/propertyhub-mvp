@@ -36,7 +36,7 @@ export default function WelcomePage() {
 
       {/* Hero */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
-        <p className="section-label mb-8 animate-on-mount">Curated Luxury Real Estate · India</p>
+        <p className="section-label mb-8 animate-on-mount">Discover Curated Luxury Homes in India</p>
         <h1 className="text-display animate-on-mount delay-100"
           style={{ fontSize: "clamp(3.5rem,11vw,9rem)", lineHeight: 0.9, color: "var(--text-primary)", marginBottom: "1.5rem" }}>
           Your Finest<br />
@@ -45,7 +45,7 @@ export default function WelcomePage() {
         </h1>
         <p className="animate-on-mount delay-200 max-w-md mx-auto"
           style={{ color: "var(--text-secondary)", fontSize: "1rem", lineHeight: 1.7, marginBottom: "3rem" }}>
-          Extraordinary properties in Mumbai, Bangalore, Delhi, Goa, and beyond —
+          Extraordinary properties in Delhi, and beyond —
           curated for those who demand the finest.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 animate-on-mount delay-300">
