@@ -3,7 +3,7 @@ import MobileNav from "@/components/MobileNav";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
+    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
       <Navbar />
       <main className="pb-24 md:pb-0">{children}</main>
       <MobileNav />

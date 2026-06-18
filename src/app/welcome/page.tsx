@@ -1,84 +1,93 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-const stats = [
-  { value: "10,000+", label: "Properties" },
-  { value: "50+", label: "Cities" },
-  { value: "₹500Cr+", label: "Transacted" },
-];
+// PLACEHOLDER: swap for a real Sainik Farms / leafy-lane neighbourhood shot.
+const HERO_PHOTO = "https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=1900&h=1200&fit=crop";
 
 export default function WelcomePage() {
-  return (
-    <main className="relative min-h-screen flex flex-col overflow-hidden" style={{ background: "var(--bg-primary)" }}>
-      {/* Decorative background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full opacity-20"
-          style={{ background: "radial-gradient(circle, rgba(201,168,76,0.3) 0%, transparent 70%)" }} />
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: "linear-gradient(rgba(201,168,76,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.5) 1px,transparent 1px)", backgroundSize: "80px 80px" }} />
-        <div className="absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(7,7,15,0.9) 100%)" }} />
-      </div>
+  const router = useRouter();
+  const [q, setQ] = useState("");
 
-      {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-8 py-7 md:px-16">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 flex items-center justify-center" style={{ border: "1px solid var(--gold-border)" }}>
-            <MapPin size={14} style={{ color: "var(--gold-primary)" }} />
+  const goSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push(q.trim() ? `/home?q=${encodeURIComponent(q.trim())}` : "/home");
+  };
+
+  return (
+    <main style={{ background: "var(--bg)" }}>
+      {/* Header overlays the photo hero */}
+      <header style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 5 }}>
+        <div className="max-w-[1220px] mx-auto px-6 md:px-7">
+          <div className="flex items-center justify-between" style={{ height: "74px" }}>
+            <Link href="/home" className="flex items-center gap-2.5">
+              <span className="w-[26px] h-[26px]" style={{ background: "var(--brand)", borderRadius: "7px" }} />
+              <span className="text-display" style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--on-dark)" }}>GharJi</span>
+            </Link>
+            <nav className="flex items-center gap-7" style={{ fontSize: "0.92rem", color: "var(--on-dark-soft)" }}>
+              <Link href="/home" className="hidden sm:inline hover:text-white transition-colors">Rent</Link>
+              <Link href="/home" className="hidden sm:inline hover:text-white transition-colors">Browse</Link>
+              <Link href="/post-property" className="btn-gold px-5 py-2.5" style={{ borderRadius: "999px" }}>List your property</Link>
+            </nav>
           </div>
-          <span className="text-display tracking-widest" style={{ fontSize: "0.9rem", letterSpacing: "0.25em", color: "var(--text-primary)" }}>
-            PROPERTYHUB
-          </span>
         </div>
-        <Link href="/login" className="btn-ghost px-6 py-2.5 hidden md:inline-flex">Sign In</Link>
       </header>
 
-      {/* Hero */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
-        <p className="section-label mb-8 animate-on-mount">Discover Curated Luxury Homes in India</p>
-        <h1 className="text-display animate-on-mount delay-100"
-          style={{ fontSize: "clamp(3.5rem,11vw,9rem)", lineHeight: 0.9, color: "var(--text-primary)", marginBottom: "1.5rem" }}>
-          Your Finest<br />
-          <em style={{ color: "var(--gold-primary)", fontStyle: "italic" }}>Address</em><br />
-          Awaits
-        </h1>
-        <p className="animate-on-mount delay-200 max-w-md mx-auto"
-          style={{ color: "var(--text-secondary)", fontSize: "1rem", lineHeight: 1.7, marginBottom: "3rem" }}>
-          Extraordinary properties in Delhi, and beyond —
-          curated for those who demand the finest.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 animate-on-mount delay-300">
-          <Link href="/home" className="btn-gold px-10 py-4 gap-3 group">
-            Explore Properties
-            <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="/login" className="btn-ghost px-10 py-4">Sign In</Link>
+      {/* Photo hero */}
+      <section className="hero hero-overlay" style={{ backgroundImage: `linear-gradient(180deg,rgba(18,19,21,.45),rgba(18,19,21,.32) 45%,rgba(18,19,21,.60)),url('${HERO_PHOTO}')` }}>
+        <div className="max-w-[1220px] mx-auto px-6 md:px-7 w-full">
+          <h1 style={{ fontSize: "clamp(3rem,7vw,5.6rem)", maxWidth: "14ch", color: "var(--on-dark)" }}>
+            Your next place is{" "}
+            <span style={{ color: "var(--brand-glow,#ff6258)", textShadow: "0 2px 30px var(--glow)" }}>around the corner.</span>
+          </h1>
+          <p style={{ color: "var(--on-dark-soft)", fontSize: "1.1rem", marginTop: "22px", maxWidth: "42ch" }}>
+            Browse real Sainik Farms rentals and message the owner straight away. No fees, no runaround.
+          </p>
+          <form onSubmit={goSearch} className="flex gap-3" style={{ marginTop: "34px", maxWidth: "560px" }}>
+            <input value={q} onChange={(e) => setQ(e.target.value)}
+              placeholder="Search a locality, e.g. Western Avenue"
+              className="flex-1"
+              style={{ background: "rgba(255,255,255,0.95)", border: "1px solid transparent", borderRadius: "14px", padding: "17px 20px", color: "var(--text)", fontSize: "1rem", outline: "none", boxShadow: "0 10px 40px rgba(0,0,0,0.25)" }} />
+            <button type="submit" className="btn-gold" style={{ borderRadius: "14px", padding: "0 30px", fontSize: "1rem" }}>Search</button>
+          </form>
         </div>
+      </section>
 
-        {/* Stats */}
-        <div className="flex items-center gap-12 mt-20 animate-on-mount delay-400 pt-8"
-          style={{ borderTop: "1px solid var(--border-subtle)" }}>
-          {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <p className="text-display" style={{ fontSize: "1.6rem", color: "var(--gold-primary)" }}>{s.value}</p>
-              <p style={{ fontSize: "0.65rem", letterSpacing: "0.15em", color: "var(--text-muted)", textTransform: "uppercase", marginTop: "4px" }}>{s.label}</p>
+      {/* How it works — light body */}
+      <section className="max-w-[1220px] mx-auto px-6 md:px-7" style={{ padding: "64px 28px" }}>
+        <p className="section-label" style={{ marginBottom: "10px" }}>How GharJi works</p>
+        <h2 style={{ fontSize: "1.9rem", marginBottom: "32px", color: "var(--text)" }}>Three steps. No middlemen taking a cut.</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {[
+            { n: "1", t: "Browse listings", d: "Real, hand-checked rentals across Sainik Farms — B Block, Western Avenue, Central Avenue and more." },
+            { n: "2", t: "Open a listing", d: "See photos, rent, beds, baths and area, plus who's listing it — owner or broker." },
+            { n: "3", t: "Message directly", d: "Tap WhatsApp or Call to reach the owner or broker yourself. No fees to GharJi." },
+          ].map((s) => (
+            <div key={s.n} className="card-luxury" style={{ padding: "24px" }}>
+              <span className="text-display" style={{ display: "inline-flex", width: "38px", height: "38px", alignItems: "center", justifyContent: "center", background: "var(--brand)", color: "#fff", borderRadius: "10px", fontWeight: 700 }}>{s.n}</span>
+              <h3 style={{ fontSize: "1.2rem", margin: "16px 0 6px", color: "var(--text)" }}>{s.t}</h3>
+              <p style={{ color: "var(--muted)", fontSize: "0.92rem", lineHeight: 1.6 }}>{s.d}</p>
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Footer strip */}
-      <div className="relative z-10 flex items-center justify-between px-8 py-5 md:px-16"
-        style={{ borderTop: "1px solid var(--border-subtle)" }}>
-        <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", letterSpacing: "0.1em" }}>© 2026 PROPERTYHUB</p>
-        <div className="flex gap-6">
-          {["Privacy", "Terms", "Contact"].map((item) => (
-            <Link key={item} href="#" style={{ fontSize: "0.7rem", color: "var(--text-muted)", letterSpacing: "0.1em" }}
-              className="hover:text-yellow-400 transition-colors">{item}</Link>
-          ))}
+        <div className="flex gap-3" style={{ marginTop: "36px" }}>
+          <Link href="/home" className="btn-gold px-8 py-3.5">Browse rentals</Link>
+          <Link href="/post-property" className="btn-ghost px-8 py-3.5">List your property</Link>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ borderTop: "1px solid var(--line)" }}>
+        <div className="max-w-[1220px] mx-auto px-6 md:px-7 flex items-center justify-between" style={{ padding: "20px 28px" }}>
+          <p style={{ fontSize: "0.8rem", color: "var(--muted)" }}>© 2026 GharJi · Sainik Farms, South Delhi</p>
+          <div className="flex gap-6">
+            {["Privacy", "Terms", "Contact"].map((i) => (
+              <Link key={i} href="#" style={{ fontSize: "0.8rem", color: "var(--muted)" }} className="hover:text-[var(--brand)] transition-colors">{i}</Link>
+            ))}
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

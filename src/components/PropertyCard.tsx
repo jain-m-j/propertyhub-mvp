@@ -1,63 +1,63 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Bed, Bath, Maximize2, MapPin } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useState } from "react";
 import type { Property } from "@/types";
+import { whatsappLink } from "@/lib/utils";
 
 export default function PropertyCard({ property }: { property: Property }) {
   const [liked, setLiked] = useState(false);
+  const href = `/property/${property.id}`;
+
   return (
-    <Link href={`/property/${property.id}`} className="block group">
-      <article className="card-luxury overflow-hidden">
-        {/* Image */}
-        <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
-          <Image src={property.images[0]} alt={property.title} fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-            sizes="(max-width:768px) 100vw,(max-width:1200px) 50vw,33vw" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top,rgba(7,7,15,0.85) 0%,transparent 55%)" }} />
+    <article className="card-luxury overflow-hidden flex flex-col">
+      {/* Photo */}
+      <Link href={href} className="block relative" style={{ aspectRatio: "4/3" }}>
+        <Image src={property.images[0]} alt={property.title} fill
+          className="object-cover"
+          sizes="(max-width:600px) 100vw,(max-width:900px) 50vw,33vw" />
+        <span className="tag-luxury absolute" style={{ top: "14px", left: "14px" }}>
+          {property.type === "Rent" ? "For Rent" : "For Sale"}
+        </span>
+        <button onClick={(e) => { e.preventDefault(); setLiked(!liked); }}
+          className="absolute flex items-center justify-center"
+          style={{ top: "12px", right: "12px", width: "34px", height: "34px", borderRadius: "50%", background: "rgba(255,255,255,0.85)", backdropFilter: "blur(4px)" }}
+          aria-label="Save">
+          <Heart size={16} fill={liked ? "var(--brand)" : "none"} style={{ color: liked ? "var(--brand)" : "var(--text)" }} />
+        </button>
+      </Link>
 
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex gap-2">
-            <span className="tag-luxury">{property.type}</span>
-            {property.isFeatured && <span className="tag-luxury" style={{ borderColor: "var(--gold-primary)", background: "rgba(201,168,76,0.12)" }}>Featured</span>}
-          </div>
+      {/* Info */}
+      <div className="p-5 flex flex-col flex-1">
+        <p className="text-display" style={{ fontSize: "1.8rem", fontWeight: 700, lineHeight: 1 }}>
+          {property.price}
+          {property.period && <span style={{ fontSize: "0.85rem", color: "var(--muted)", fontFamily: "var(--font-body)", fontWeight: 400 }}> {property.period}</span>}
+        </p>
+        <Link href={href}>
+          <h3 className="line-clamp-1" style={{ fontSize: "1.1rem", fontWeight: 500, margin: "6px 0 2px", color: "var(--text)" }}>{property.title}</h3>
+        </Link>
+        <p style={{ color: "var(--muted)", fontSize: "0.88rem" }}>{property.location}</p>
 
-          {/* Heart */}
-          <button onClick={(e) => { e.preventDefault(); setLiked(!liked); }}
-            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center transition-all"
-            style={{ background: "rgba(7,7,15,0.75)", border: `1px solid ${liked ? "var(--gold-border)" : "var(--border-subtle)"}`, backdropFilter: "blur(6px)", borderRadius: "2px" }}>
-            <Heart size={13} fill={liked ? "var(--gold-primary)" : "none"} style={{ color: liked ? "var(--gold-primary)" : "var(--text-secondary)" }} />
-          </button>
-
-          {/* Price overlay */}
-          <div className="absolute bottom-3 left-4">
-            <p className="text-display" style={{ fontSize: "1.45rem", color: "var(--text-primary)", lineHeight: 1 }}>
-              {property.price}
-              {property.period && <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginLeft: "3px" }}>{property.period}</span>}
-            </p>
-          </div>
+        {/* Meta line */}
+        <div className="flex gap-4" style={{ marginTop: "14px", paddingTop: "14px", borderTop: "1px solid var(--line)", color: "var(--muted)", fontSize: "0.85rem" }}>
+          <span><b style={{ color: "var(--text)" }}>{property.bedrooms}</b> {property.bedrooms === 1 ? "bed" : "beds"}</span>
+          <span><b style={{ color: "var(--text)" }}>{property.bathrooms}</b> {property.bathrooms === 1 ? "bath" : "baths"}</span>
+          <span><b style={{ color: "var(--text)" }}>{property.area.replace(/\s*sqft$/i, "")}</b> sqft</span>
         </div>
 
-        {/* Info */}
-        <div className="p-4">
-          <h3 className="text-display mb-1 group-hover:text-yellow-400 transition-colors line-clamp-1"
-            style={{ fontSize: "1.05rem", color: "var(--text-primary)" }}>{property.title}</h3>
-          <div className="flex items-center gap-1.5 mb-3">
-            <MapPin size={10} style={{ color: "var(--text-muted)" }} />
-            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>{property.location}</p>
-          </div>
-          <hr className="divider-gold mb-3" />
-          <div className="flex items-center gap-5">
-            {[{ icon: Bed, v: `${property.bedrooms} Bed` }, { icon: Bath, v: `${property.bathrooms} Bath` }, { icon: Maximize2, v: property.area }].map(({ icon: I, v }) => (
-              <div key={v} className="flex items-center gap-1.5">
-                <I size={10} style={{ color: "var(--text-muted)" }} />
-                <span style={{ fontSize: "0.7rem", color: "var(--text-secondary)" }}>{v}</span>
-              </div>
-            ))}
-          </div>
+        {/* Actions */}
+        <div className="flex gap-2.5" style={{ marginTop: "16px" }}>
+          <a href={whatsappLink(property.ownerWhatsapp, property.title)} target="_blank" rel="noopener noreferrer"
+            className="btn-gold flex-1 text-center" style={{ padding: "11px", fontSize: "0.88rem" }}>
+            WhatsApp
+          </a>
+          <a href={`tel:${property.ownerPhone}`}
+            className="btn-ghost flex-1 text-center" style={{ padding: "11px", fontSize: "0.88rem" }}>
+            Call
+          </a>
         </div>
-      </article>
-    </Link>
+      </div>
+    </article>
   );
 }
